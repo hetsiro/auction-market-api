@@ -40,7 +40,7 @@ exports.postLogin = async (req, res) => {
         if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
         const token = jwt.sign({ userId: user._id }, process.env.SECRET_JWT_SEED, {
-            expiresIn: '1d'
+            expiresIn: '10s'
         });
 
         res.json({ token, user: { id: user._id, email: user.email } });
@@ -93,5 +93,16 @@ exports.postResetPassword = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.verifyToken = async (req, res) => {
+  const token = req.headers.authorization;
+
+  try {
+    jwt.verify(token, process.env.SECRET_JWT_SEED);
+    res.json(true);
+  } catch (err) {
+    return res.status(403).json({ message: 'Invalid or expired token' });
   }
 };
