@@ -2,8 +2,9 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const { API_URL } = require('../config/api');
+// const { API_URL } = require('../config/api');
 const Cart = require('../models/Cart');
+const { FRONT_URL } = require('../config/front');
 
 // Register
 exports.postRegister = async (req, res) => {
@@ -63,7 +64,7 @@ exports.postRecoveryRequest = async (req, res) => {
         user.resetTokenExpire = expireDate;
         await user.save();
 
-        res.json(`${API_URL}/reset-password/${token}`);
+        res.json(`${FRONT_URL}/reset-password/${token}`);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
